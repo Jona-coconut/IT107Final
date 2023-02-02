@@ -20,11 +20,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $privileges = implode(", ", $privileges);
   
   // Create the user
-  $query = "CREATE USER '$username'@'$host' IDENTIFIED BY '$password'";
-  $result = mysqli_query($conn, $query);
+  // $query = "CREATE USER '$username'@'$host' IDENTIFIED BY '$password'";
+  // $result = mysqli_query($conn, $query);
   
   // Grant privileges to the user
-  $query = "GRANT $privileges ON it107fp.* TO 'root'@'localhost'";
+  $query = "GRANT ALL PRIVILEGES ON *.* TO '$username'@'$host'";
   $result = mysqli_query($conn, $query);
 
   if ($result) {
