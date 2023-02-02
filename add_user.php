@@ -11,7 +11,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   }
 
   // Connect to the database
-  $conn = mysqli_connect('localhost', 'root', 'Coco_nut12', 'it107fp');
+  $conn = mysqli_connect('localhost', 'root', 'Coco_nut12');
   if (!$conn) {
     die("Connection failed: " . mysqli_connect_error());
   }
@@ -20,15 +20,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $privileges = implode(", ", $privileges);
   
   // Create the user
-  // $query = "CREATE USER '$username'@'$host' IDENTIFIED BY '$password'";
-  // $result = mysqli_query($conn, $query);
+  $query = "CREATE USER '$username'@'$host' IDENTIFIED BY '$password'";
+  $result = mysqli_query($conn, $query);
   
   // Grant privileges to the user
-  $query = "GRANT ALL PRIVILEGES ON *.* TO '$username'@'$host'";
+  $query = "GRANT $privileges ON $database.* TO '$username'@'$host'";
+  $result = mysqli_query($conn, $query);
+
+  $query = "FLUSH PRIVILEGES";
   $result = mysqli_query($conn, $query);
 
   if ($result) {
-    echo "New user created successfully";
+    
+    echo "New user created successfully <br>";
+    $query = mysqli_query($conn, "SHOW GRANTS FOR '$username'@'$host'");
+
+    if (!empty($query)) {
+      while($row = mysqli_fetch_row($query)) {
+        echo $row[0] . '<br>';
+      }
+    }
   } else {
     echo "Error: " . mysqli_error($conn);
   }
